@@ -1,0 +1,4 @@
+<div class="panel" ng-class="{
+      'panel-danger':   AlertService.getAlert().type === 'error',
+      'panel-success':  AlertService.getAlert().type === 'success'
+    }" role="alert" ng-if="AlertService.hasAlert()"><div class="panel-heading"><button type="button" class="close" aria-label="Close" ng-click="AlertService.hideAlert()"><span aria-hidden="true">&times;</span></button><h3 class="panel-title"><span><i ng-if="AlertService.getAlert().type === 'error'" class="fa fa-fw fa-exclamation"></i> <i ng-if="AlertService.getAlert().type === 'success'" class="fa fa-fw fa-check"></i> &nbsp;{{AlertService.getAlert().title}}</span></h3></div><div class="panel-body" ng-if="AlertService.getAlert().errList.length">{{AlertService.getAlert()}}<ul><li ng-repeat="error in AlertService.getErrorList()">{{error}}</li></ul></div></div>

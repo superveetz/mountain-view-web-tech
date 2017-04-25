@@ -1,0 +1,58 @@
+.main-wrap {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+
+    .main-view {
+        position: absolute;    
+        box-sizing: border-box;
+        width: 100%;
+
+        -webkit-animation-fill-mode: both;
+        -moz-animation-fill-mode: both;
+        -ms-animation-fill-mode: both;
+        animation-fill-mode: both;
+
+        &.ng-leave,
+        &.ng-leave-active {
+            -webkit-animation: slideOutLeft linear;
+            -moz-animation: slideOutLeft linear;
+            -ms-animation: slideOutLeft linear;
+            animation: slideOutLeft linear;
+
+            -webkit-animation-duration: 0.395s;
+            -moz-animation-duration: 0.395s;
+            -ms-animation-duration: 0.395s;
+            animation-duration: 0.395s;
+
+            -webkit-animation-delay: 0.05s;
+            -moz-animation-delay: 0.05s;
+            -ms-animation-delay: 0.05s;
+            animation-delay: 0.05s;
+
+            z-index: 555;
+        }
+        
+        &.ng-enter,
+        &.ng-enter-active {
+            visibility: hidden;
+            
+            -webkit-animation: slideInRight linear;
+            -moz-animation: slideInRight linear;
+            -ms-animation: slideInRight linear;
+            animation: slideInRight linear;
+
+            -webkit-animation-duration: 0.4s;
+            -moz-animation-duration: 0.4s;
+            -ms-nimation-duration: 0.4s;
+            animation-duration: 0.4s;
+
+            -webkit-animation-delay: 0.05s;
+            -moz-animation-delay: 0.05s;
+            -ms-animation-delay: 0.05s;
+            animation-delay: 0.05s;
+
+            z-index: 666;
+        }
+    }
+}

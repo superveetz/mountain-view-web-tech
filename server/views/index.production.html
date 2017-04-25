@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1.0001, minimum-scale=1.0001, maximum-scale=1.0001, user-scalable=no"/>
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>Mountain View Web Tech</title>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/vendors+styles.min.css">
+        
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        
+        <!-- Disable Zoom on Safari IOS 10 Inconsistent Hack -->
+        <script>
+            // disable pinch/swipe effects in ios10
+            document.documentElement.addEventListener('touchstart', function (event) {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            }, false);
+
+            // disable double-tap zoom effects in ios10
+            var lastTouchEnd = 0;
+            document.documentElement.addEventListener('touchend', function (event) {
+                var now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        </script>
+
+        <base href="/">
+    </head>
+    <body scroll-disabled>
+        <!-- Main Nav + Side Menu -->
+        <main-nav id="main-nav"></main-nav>
+
+        <!-- App -->
+        <div 
+            id="app" 
+            hide-nav-on-scroll ui-view>
+            <style>
+                #loading-wrapper {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                }
+
+                #loading-text {
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                color: #999;
+                width: 100px;
+                height: 30px;
+                margin: -7px 0 0 -45px;
+                text-align: center;
+                font-family: 'PT Sans Narrow', sans-serif;
+                font-size: 20px;
+                }
+
+                #loading-content {
+                display: block;
+                position: relative;
+                left: 50%;
+                top: 50%;
+                width: 170px;
+                height: 170px;
+                margin: -85px 0 0 -85px;
+                border: 3px solid #F00;
+                }
+
+                #loading-content:after {
+                content: "";
+                position: absolute;
+                border: 3px solid #0F0;
+                left: 15px;
+                right: 15px;
+                top: 15px;
+                bottom: 15px;
+                }
+
+                #loading-content:before {
+                content: "";
+                position: absolute;
+                border: 3px solid #00F;
+                left: 5px;
+                right: 5px;
+                top: 5px;
+                bottom: 5px;
+                }
+
+                #loading-content {
+                border: 3px solid transparent;
+                border-top-color: #4D658D;
+                border-bottom-color: #4D658D;
+                border-radius: 50%;
+                -webkit-animation: loader 2s linear infinite;
+                -moz-animation: loader 2s linear infinite;
+                -o-animation: loader 2s linear infinite;
+                animation: loader 2s linear infinite;
+                }
+
+                #loading-content:before {
+                border: 3px solid transparent;
+                border-top-color: #D4CC6A;
+                border-bottom-color: #D4CC6A;
+                border-radius: 50%;
+                -webkit-animation: loader 3s linear infinite;
+                    -moz-animation: loader 2s linear infinite;
+                -o-animation: loader 2s linear infinite;
+                animation: loader 3s linear infinite;
+                }
+
+                #loading-content:after {
+                border: 3px solid transparent;
+                border-top-color: #84417C;
+                border-bottom-color: #84417C;
+                border-radius: 50%;
+                -webkit-animation: loader 1.5s linear infinite;
+                animation: loader 1.5s linear infinite;
+                    -moz-animation: loader 2s linear infinite;
+                -o-animation: loader 2s linear infinite;
+                }
+
+                @-webkit-keyframes loaders {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    -ms-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    -ms-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+                }
+
+                @keyframes loader {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    -ms-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    -ms-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+                }
+
+                #content-wrapper {
+                color: #FFF;
+                position: fixed;
+                left: 0;
+                top: 20px;
+                width: 100%;
+                height: 100%;
+                }
+
+                #header
+                {
+                width: 800px;
+                margin: 0 auto;
+                text-align: center;
+                height: 100px;
+                background-color: #666;
+                }
+
+                #content
+                {
+                width: 800px;
+                height: 1000px;
+                margin: 0 auto;
+                text-align: center;
+                background-color: #888;
+                }
+            </style>
+            <div id="loading-wrapper">
+                <div id="loading-text">LOADING</div>
+                <div id="loading-content"></div>
+            </div>
+        </div>
+
+        <!-- Vendor JS + AngularJS + AppJS -->
+        <script src="/vendors+app.min.js"></script>
+
+        <script>
+            (function (firebase) {
+                // Initialize the Firebase SDK
+                var config = {
+                    apiKey: 'AIzaSyDLoNjTWobxBBCIkHVHno2wgL78wAdXdLY',
+                    authDomain: 'cis245-final-project.firebaseapp.com',
+                    databaseURL: 'https://cis245-final-project.firebaseio.com',
+                };
+                firebase.initializeApp(config);
+            })(firebase);
+        </script>
+        
+    </body>
+</html>
