@@ -4,9 +4,17 @@
 var loopback  = require('loopback');
 var boot      = require('loopback-boot');
 var ejs       = require('ejs');
+var path      = require('path');
 
 // create app
 var app = module.exports = loopback();
+
+// set static files to allow static files to avoid using the router
+if (process.env.NODE_ENV === 'development') {
+  app.use(loopback.static(path.resolve(__dirname, '../client/src/')));
+} else if (process.env.NODE_ENV === 'production') {
+  app.use(loopback.static(path.resolve(__dirname, '../client/dist/')));
+}
 
 // define templating engine
 app.set('view engine', 'html'); // use .html file extension

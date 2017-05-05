@@ -66,8 +66,6 @@
 
         // open mobile side nav
         $scope.openMobileSideNav = function () {
-            console.log('hiya');
-            
             // using jasny bootstrap jquery api
             $('#mobile-side-nav').offcanvas('show');
             return true;

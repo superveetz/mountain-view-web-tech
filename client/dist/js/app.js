@@ -79,149 +79,6 @@
 'use strict';
 
 (function (angular) {
-    angular.module('app.directives', ['app.controllers']).directive('mainNav', [function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            templateUrl: '/js/directives/templates/main-nav/main-nav.html',
-            controller: 'MainNavCtrl'
-        };
-    }]).directive('mainFooter', [function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            templateUrl: '/js/directives/templates/main-footer/main-footer.html',
-            controller: 'MainFooterCtrl'
-        };
-    }]).directive('alertBox', ['AlertService', function (AlertService) {
-        return {
-            restrict: 'E',
-            templateUrl: function templateUrl(scope, elem) {
-                // Use default theme if no theme is provided
-                if (elem.theme) {
-                    return '/js/directives/templates/alert-box/' + elem.theme + '.html';
-                } else {
-                    return '/js/directives/templates/alert-box/default.html';
-                }
-            },
-            link: function link(scope) {
-                scope.AlertService = AlertService;
-            }
-        };
-    }]).directive('hideNavOnScroll', [function () {
-        return {
-            restrict: 'A',
-            link: function link(scope, elem) {
-                var mainNav = document.getElementById('top-nav');
-                var mainNavEl = angular.element(mainNav);
-                var lastScrollAmount = elem.scrollTop();
-                var animationOccuring = false;
-
-                elem.bind('scroll', function (event) {
-                    var scrollAmount = elem.scrollTop();
-
-                    if (scrollAmount > lastScrollAmount) {
-                        // scrolling down 
-                        if (!animationOccuring) {
-                            if (!mainNavEl.hasClass('slideOutUp')) {
-                                if (mainNavEl.hasClass('slideInDown')) mainNavEl.removeClass('slideInDown');
-                                mainNavEl.addClass('slideOutUp');
-                                animationOccuring = true;
-                                setTimeout(function () {
-                                    animationOccuring = false;
-                                }, 500);
-                            }
-                        }
-                    } else {
-                        // scrolling up
-                        if (!animationOccuring) {
-                            if (!mainNavEl.hasClass('slideInDown')) {
-                                if (mainNavEl.hasClass('slideOutUp')) mainNavEl.removeClass('slideOutUp');
-                                mainNavEl.addClass('slideInDown');
-                                animationOccuring = true;
-                                setTimeout(function () {
-                                    animationOccuring = false;
-                                }, 500);
-                            }
-                        }
-                    }
-
-                    // always show nav at top of screen
-                    if (scrollAmount <= 50) {
-                        // at top of screen
-                        if (!mainNavEl.hasClass('slideInDown')) {
-                            if (mainNavEl.hasClass('slideOutUp')) mainNavEl.removeClass('slideOutUp');
-                            mainNavEl.addClass('slideInDown');
-                            animationOccuring = true;
-                            setTimeout(function () {
-                                animationOccuring = false;
-                            }, 500);
-                        }
-                    }
-
-                    lastScrollAmount = elem.scrollTop();
-                });
-            }
-        };
-    }]).directive('scrollDisabled', ['$window', '$timeout', function ($window, $timeout) {
-        return {
-            restrict: 'A',
-            link: function link(scope, elem) {
-
-                var window = angular.element($window);
-
-                elem.on('show.bs.offcanvas', function () {
-                    var body = document.getElementsByTagName('body')[0];
-                    var html = document.getElementsByTagName('html')[0];
-                    var app = document.getElementById('app');
-                    var bodyElem = angular.element(body);
-                    var htmlElem = angular.element(html);
-                    var appElem = angular.element(app);
-
-                    bodyElem.addClass('body-scroll-disabled');
-                    htmlElem.addClass('html-scroll-disabled');
-                    $timeout(function () {
-                        bodyElem.ontouchmove = function (event) {
-                            event.preventDefault();
-                        };
-                        app.ontouchmove = function (event) {
-                            event.preventDefault();
-                        };
-                    }, 300);
-                });
-
-                elem.on('hide.bs.offcanvas', function () {
-                    var body = document.getElementsByTagName('body')[0];
-                    var html = document.getElementsByTagName('html')[0];
-                    var bodyElem = angular.element(body);
-                    var htmlElem = angular.element(html);
-
-                    $timeout(function () {
-                        window.scrollTop(400);
-                        bodyElem.removeClass('body-scroll-disabled');
-                        htmlElem.removeClass('html-scroll-disabled');
-                        bodyElem.ontouchmove = function (event) {
-                            return true;
-                        };
-                        app.ontouchmove = function (event) {
-                            return true;
-                        };
-                    }, 300);
-                });
-            }
-        };
-    }]).directive('fadeInOnLoad', ['$timeout', function ($timeout) {
-        return {
-            restrict: 'A',
-            link: function link(scope, elem, attr) {
-                elem.addClass('animated fadeIn');
-            }
-        };
-    }]);
-})(angular);
-'use strict';
-
-(function (angular) {
     angular.module('app.controllers', ['app.services']).controller('MainNavCtrl', ['$rootScope', '$scope', '$firebaseAuth', '$http', '$window', '$state', '$timeout', 'ModalService', 'AlertService', function ($rootScope, $scope, $firebaseAuth, $http, $window, $state, $timeout, ModalService, AlertService) {
         // init $scope
         $scope.authObj = $firebaseAuth();
@@ -285,8 +142,6 @@
 
         // open mobile side nav
         $scope.openMobileSideNav = function () {
-            console.log('hiya');
-
             // using jasny bootstrap jquery api
             $('#mobile-side-nav').offcanvas('show');
             return true;
@@ -445,6 +300,149 @@
 'use strict';
 
 (function (angular) {
+    angular.module('app.directives', ['app.controllers']).directive('mainNav', [function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: '/js/directives/templates/main-nav/main-nav.html',
+            controller: 'MainNavCtrl'
+        };
+    }]).directive('mainFooter', [function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: '/js/directives/templates/main-footer/main-footer.html',
+            controller: 'MainFooterCtrl'
+        };
+    }]).directive('alertBox', ['AlertService', function (AlertService) {
+        return {
+            restrict: 'E',
+            templateUrl: function templateUrl(scope, elem) {
+                // Use default theme if no theme is provided
+                if (elem.theme) {
+                    return '/js/directives/templates/alert-box/' + elem.theme + '.html';
+                } else {
+                    return '/js/directives/templates/alert-box/default.html';
+                }
+            },
+            link: function link(scope) {
+                scope.AlertService = AlertService;
+            }
+        };
+    }]).directive('hideNavOnScroll', [function () {
+        return {
+            restrict: 'A',
+            link: function link(scope, elem) {
+                var mainNav = document.getElementById('top-nav');
+                var mainNavEl = angular.element(mainNav);
+                var lastScrollAmount = elem.scrollTop();
+                var animationOccuring = false;
+
+                elem.bind('scroll', function (event) {
+                    var scrollAmount = elem.scrollTop();
+
+                    if (scrollAmount > lastScrollAmount) {
+                        // scrolling down 
+                        if (!animationOccuring) {
+                            if (!mainNavEl.hasClass('slideOutUp')) {
+                                if (mainNavEl.hasClass('slideInDown')) mainNavEl.removeClass('slideInDown');
+                                mainNavEl.addClass('slideOutUp');
+                                animationOccuring = true;
+                                setTimeout(function () {
+                                    animationOccuring = false;
+                                }, 500);
+                            }
+                        }
+                    } else {
+                        // scrolling up
+                        if (!animationOccuring) {
+                            if (!mainNavEl.hasClass('slideInDown')) {
+                                if (mainNavEl.hasClass('slideOutUp')) mainNavEl.removeClass('slideOutUp');
+                                mainNavEl.addClass('slideInDown');
+                                animationOccuring = true;
+                                setTimeout(function () {
+                                    animationOccuring = false;
+                                }, 500);
+                            }
+                        }
+                    }
+
+                    // always show nav at top of screen
+                    if (scrollAmount <= 50) {
+                        // at top of screen
+                        if (!mainNavEl.hasClass('slideInDown')) {
+                            if (mainNavEl.hasClass('slideOutUp')) mainNavEl.removeClass('slideOutUp');
+                            mainNavEl.addClass('slideInDown');
+                            animationOccuring = true;
+                            setTimeout(function () {
+                                animationOccuring = false;
+                            }, 500);
+                        }
+                    }
+
+                    lastScrollAmount = elem.scrollTop();
+                });
+            }
+        };
+    }]).directive('scrollDisabled', ['$window', '$timeout', function ($window, $timeout) {
+        return {
+            restrict: 'A',
+            link: function link(scope, elem) {
+
+                var window = angular.element($window);
+
+                elem.on('show.bs.offcanvas', function () {
+                    var body = document.getElementsByTagName('body')[0];
+                    var html = document.getElementsByTagName('html')[0];
+                    var app = document.getElementById('app');
+                    var bodyElem = angular.element(body);
+                    var htmlElem = angular.element(html);
+                    var appElem = angular.element(app);
+
+                    bodyElem.addClass('body-scroll-disabled');
+                    htmlElem.addClass('html-scroll-disabled');
+                    $timeout(function () {
+                        bodyElem.ontouchmove = function (event) {
+                            event.preventDefault();
+                        };
+                        app.ontouchmove = function (event) {
+                            event.preventDefault();
+                        };
+                    }, 300);
+                });
+
+                elem.on('hide.bs.offcanvas', function () {
+                    var body = document.getElementsByTagName('body')[0];
+                    var html = document.getElementsByTagName('html')[0];
+                    var bodyElem = angular.element(body);
+                    var htmlElem = angular.element(html);
+
+                    $timeout(function () {
+                        window.scrollTop(400);
+                        bodyElem.removeClass('body-scroll-disabled');
+                        htmlElem.removeClass('html-scroll-disabled');
+                        bodyElem.ontouchmove = function (event) {
+                            return true;
+                        };
+                        app.ontouchmove = function (event) {
+                            return true;
+                        };
+                    }, 300);
+                });
+            }
+        };
+    }]).directive('fadeInOnLoad', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function link(scope, elem, attr) {
+                elem.addClass('animated fadeIn');
+            }
+        };
+    }]);
+})(angular);
+'use strict';
+
+(function (angular) {
     angular.module('app.services', ['app.controllers']).service('ModalService', ['$uibModal', '$timeout', function ($uibModal, $timeout) {
         return {
             openRegisterAccountModal: function openRegisterAccountModal() {
@@ -501,15 +499,12 @@
                 return true;
             },
             setAlert: function setAlert(alertObj) {
-                console.log("alertObj:", alertObj);
-
                 // update alert 
                 alert = angular.copy(alertObj);
 
                 // parse slim application server error
                 if (alert.type == 'error' && alert.slimErr) {
                     alert.errList = [];
-                    console.log("alert:", alert);
                     alert.title = alert.slimErr && alert.slimErr.data && alert.slimErr.data.exception && alert.slimErr.data.exception[0] && alert.slimErr.data.exception[0].message ? alert.slimErr.data.exception[0].message : 'Error';
                 }
 

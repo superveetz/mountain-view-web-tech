@@ -73,15 +73,12 @@
                 return true;
             },
             setAlert: function (alertObj) {
-                console.log("alertObj:", alertObj);
-
                 // update alert 
                 alert = angular.copy(alertObj);  
 
                 // parse slim application server error
                 if (alert.type == 'error' && alert.slimErr) {
                     alert.errList = [];
-                    console.log("alert:", alert);
                     alert.title = alert.slimErr && 
                                      alert.slimErr.data && 
                                      alert.slimErr.data.exception && 
