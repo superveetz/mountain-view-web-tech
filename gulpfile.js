@@ -13,7 +13,8 @@ var babel         = require('gulp-babel');
 var uglify        = require('gulp-minify');
 var htmlmin       = require('gulp-htmlmin');
 var imagemin      = require('gulp-imagemin');
-var font2css      = require('gulp-font2css')
+var font2css      = require('gulp-font2css');
+var strip         = require('gulp-strip-comments');
 
 /*
  * WATCHES
@@ -43,9 +44,7 @@ gulp.task('concat-vendor-css', function () {
     './client/src/bower_components/bootstrap/dist/css/bootstrap-theme.min.css',
     './client/src/bower_components/jasny-bootstrap/dist/css/jasny-bootstrap.min.css',
     './client/src/bower_components/font-awesome/css/font-awesome.min.css',
-    './client/src/bower_components/animate.css/animate.min.css',
-    './client/src/css/themes/stylish-portfolio.css',
-    './client/src/css/themes/modern-business.css'
+    './client/src/bower_components/animate.css/animate.min.css'
   ])
   .pipe(concat("vendors.min.css"))
   .pipe(gulp.dest('./client/dist/css/'));
@@ -53,8 +52,12 @@ gulp.task('concat-vendor-css', function () {
 
 gulp.task('concat-app-css', function () {
   // concat into 1 css file
-  var appCSS = gulp.src('./client/src/css/transpiled/**/*.css')
-                  .pipe(concat("styles.css"));
+  var appCSS = gulp.src([
+    './client/src/css/transpiled/**/*.css',
+    './client/src/css/themes/stylish-portfolio.css',
+    './client/src/css/themes/modern-business.css'
+  ])
+  .pipe(concat("styles.css"));
     
   var task1 = appCSS.pipe(gulp.dest('./client/src/css/'));
   var task2 = appCSS.pipe(gulp.dest('./client/dist/css/'));
@@ -109,7 +112,8 @@ gulp.task('concat-vendor-js', function () {
     './client/src/bower_components/angular-animate/angular-animate.min.js',
     './client/src/bower_components/angular-ui-validate/dist/validate.min.js',
     './client/src/bower_components/angularfire/dist/angularfire.min.js',
-    './client/src/bower_components/ngSmoothScroll/dist/angular-smooth-scroll.min.js'
+    './client/src/bower_components/ngSmoothScroll/dist/angular-smooth-scroll.min.js',
+    './client/src/bower_components/angular-resource/angular-resource.min.js'
   ])
   .pipe(concat('vendors.min.js'))
   .pipe(gulp.dest('./client/dist/js/'));
@@ -159,14 +163,10 @@ gulp.task('minify-html', function () {
 
 gulp.task('optimize-images', function() {
     return gulp.src([
-      './client/src/**/*.png',
-      './client/src/**/*.jpg',
-      './client/src/**/*.gif',
-      './client/src/**/*.jpeg',
-      '!./client/src/bower_components/**/*'
+      './client/src/assets/img/**/*'
     ])
     .pipe(imagemin())
-    .pipe(gulp.dest('./client/dist/'));
+    .pipe(gulp.dest('./client/dist/assets/img'));
 });
 
 gulp.task('copy-fonts-to-dist', function() {
@@ -176,6 +176,13 @@ gulp.task('copy-fonts-to-dist', function() {
       './client/src/fonts/**/*.{otf,ttf,woff,woff2}'
     ])
     .pipe(gulp.dest('./client/dist/fonts/'))
+});
+
+// strip comments
+gulp.task('strip-comments', function () {
+  return gulp.src('./client/dist/vendors+app.min.js')
+    .pipe(strip())
+    .pipe(gulp.dest('./client/dist/'));
 });
 
 gulp.task('default', function (fnCb) {
@@ -190,6 +197,7 @@ gulp.task('default', function (fnCb) {
     'concat-app-js',
     'minify-app-js',
     'concat-vendors+app-js',
+    'strip-comments',
     'minify-html',
     'optimize-images',
     fnCb);

@@ -10,7 +10,9 @@
         'app.controllers',
         'app.directives',
         'app.services',
-        'canvas-raining'
+        'canvas-raining',
+        'ngResource',
+        'lbServices'
     ])
 
     .run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout) {

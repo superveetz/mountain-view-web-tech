@@ -4,52 +4,259 @@
     <!-- Page Heading/Breadcrumbs -->
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Contact
-                <small>Subheading</small>
+            <h1 class="page-header">Contact Us
+                <small>7 Days a Week</small>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="index.html">Home</a>
-                </li>
-                <li class="active">Contact</li>
-            </ol>
         </div>
     </div>
     <!-- /.row -->
 
     <!-- Content Row -->
     <div class="row">
-        <!-- Map Column -->
         <div class="col-md-8">
-            <!-- Embedded Google Map -->
-            <iframe width="100%" height="400px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?hl=en&amp;ie=UTF8&amp;ll=37.0625,-95.677068&amp;spn=56.506174,79.013672&amp;t=m&amp;z=4&amp;output=embed"></iframe>
+            <h3>Send us a Message <small>Or Request a Quote</small></h3>
+            
+            <alert-box></alert-box>
+
+            <form 
+                name="contactForm" 
+                id="contactForm" 
+                class="form-horizontal"
+                ng-submit="contactForm.$valid && sendEmail()" 
+                novalidate>
+
+                <div 
+                    class="form-group" 
+                    ng-class="{ 
+                        'has-error'     : contactForm.userName.$invalid    && contactForm.$submitted     || serverResponse.contactErr,
+                        'has-success'   : contactForm.userName.$valid      && contactForm.$submitted     && !serverResponse.contactErr,
+                        'has-feedback'  : contactForm.userName.$invalid    || contactForm.userName.$valid
+                    }">
+                    <label class="control-label sr-only" for="userName">Name</label>
+                    <div class="col-sm-12">
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-user"></i>
+                            </span>
+
+                            <input 
+                                type="text"
+                                class="form-control" 
+                                id="userName" 
+                                name="userName" 
+                                placeholder="Full Name" 
+                                ng-model="user.name"
+                                ng-keyup="serverResponse.contactErr = false"
+                                required>
+                        </div>
+
+                        <span 
+                            ng-if="(contactForm.userName.$touched || contactForm.$submitted) && contactForm.userName.$valid && !serverResponse.contactErr" 
+                            class="glyphicon glyphicon-ok darkgreen form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <span 
+                            ng-if="(contactForm.userName.$touched || contactForm.$submitted) && contactForm.userName.$invalid || serverResponse.contactErr" 
+                            class="glyphicon glyphicon-remove darkred form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <p ng-if="contactForm.$submitted && contactForm.userName.$error.required" class="help-block">Required</p>
+                    </div><!-- end col -->
+                </div>
+
+                <div 
+                    class="form-group" 
+                    ng-class="{ 
+                        'has-error'     : contactForm.userPhone.$invalid    && contactForm.$submitted     || serverResponse.contactErr,
+                        'has-success'   : contactForm.userPhone.$valid      && contactForm.$submitted     && !serverResponse.contactErr,
+                        'has-feedback'  : contactForm.userPhone.$invalid    || contactForm.userPhone.$valid
+                    }">
+                    <label class="control-label sr-only" for="userPhone">Phone</label>
+                    <div class="col-sm-12">
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-mobile"></i>
+                            </span>
+
+                            <input 
+                                type="text"
+                                class="form-control" 
+                                id="userPhone" 
+                                name="userPhone" 
+                                placeholder="Phone Number" 
+                                ng-model="user.phone"
+                                ng-keyup="serverResponse.contactErr = false"
+                                required>
+                        </div>
+
+                        <span 
+                            ng-if="(contactForm.userPhone.$touched || contactForm.$submitted) && contactForm.userPhone.$valid && !serverResponse.contactErr" 
+                            class="glyphicon glyphicon-ok darkgreen form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <span 
+                            ng-if="(contactForm.userPhone.$touched || contactForm.$submitted) && contactForm.userPhone.$invalid || serverResponse.contactErr" 
+                            class="glyphicon glyphicon-remove darkred form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <p ng-if="contactForm.$submitted && contactForm.userPhone.$error.required" class="help-block">Required</p>
+                    </div><!-- end col -->
+                </div>
+
+                <div 
+                    class="form-group" 
+                    ng-class="{ 
+                        'has-error'     : contactForm.userEmail.$invalid    && contactForm.$submitted     || serverResponse.contactErr,
+                        'has-success'   : contactForm.userEmail.$valid      && contactForm.$submitted     && !serverResponse.contactErr,
+                        'has-feedback'  : contactForm.userEmail.$invalid    || contactForm.userEmail.$valid
+                    }">
+                    <label class="control-label sr-only" for="userEmail">Email</label>
+                    <div class="col-sm-12">
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-envelope"></i>
+                            </span>
+
+                            <input 
+                                type="email"
+                                class="form-control" 
+                                id="userEmail" 
+                                name="userEmail" 
+                                placeholder="Email Address" 
+                                ng-model="user.email"
+                                ng-keyup="serverResponse.contactErr = false"
+                                required>
+                        </div>
+
+                        <span 
+                            ng-if="(contactForm.userEmail.$touched || contactForm.$submitted) && contactForm.userEmail.$valid && !serverResponse.contactErr" 
+                            class="glyphicon glyphicon-ok darkgreen form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <span 
+                            ng-if="(contactForm.userEmail.$touched || contactForm.$submitted) && contactForm.userEmail.$invalid || serverResponse.contactErr" 
+                            class="glyphicon glyphicon-remove darkred form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <p ng-if="contactForm.$submitted && contactForm.userEmail.$error.email" class="help-block">Email address is badly formatted</p>
+                        <p ng-if="contactForm.$submitted && contactForm.userEmail.$error.required" class="help-block">Required</p>
+                    </div><!-- end col -->
+                </div>
+
+                <div 
+                    class="form-group" 
+                    ng-class="{ 
+                        'has-error'     : contactForm.userSubject.$invalid    && contactForm.$submitted     || serverResponse.contactErr,
+                        'has-success'   : contactForm.userSubject.$valid      && contactForm.$submitted     && !serverResponse.contactErr,
+                        'has-feedback'  : contactForm.userSubject.$invalid    || contactForm.userSubject.$valid
+                    }">
+                    <label class="control-label sr-only" for="userSubject">Subject</label>
+                    <div class="col-sm-12">
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-header"></i>
+                            </span>
+
+                            <input 
+                                type="text"
+                                class="form-control" 
+                                id="userSubject" 
+                                name="userSubject" 
+                                placeholder="Subject" 
+                                ng-model="user.subject"
+                                ng-keyup="serverResponse.contactErr = false"
+                                required>
+                        </div>
+
+                        <span 
+                            ng-if="(contactForm.userSubject.$touched || contactForm.$submitted) && contactForm.userSubject.$valid && !serverResponse.contactErr" 
+                            class="glyphicon glyphicon-ok darkgreen form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <span 
+                            ng-if="(contactForm.userSubject.$touched || contactForm.$submitted) && contactForm.userSubject.$invalid || serverResponse.contactErr" 
+                            class="glyphicon glyphicon-remove darkred form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <p ng-if="contactForm.$submitted && contactForm.userSubject.$error.required" class="help-block">Required</p>
+                    </div><!-- end col -->
+                </div>
+
+                <div 
+                    class="form-group" 
+                    ng-class="{ 
+                        'has-error'     : contactForm.userMessage.$invalid    && contactForm.$submitted     || serverResponse.contactErr,
+                        'has-success'   : contactForm.userMessage.$valid      && contactForm.$submitted     && !serverResponse.contactErr,
+                        'has-feedback'  : contactForm.userMessage.$invalid    || contactForm.userMessage.$valid
+                    }">
+                    <label class="control-label sr-only" for="userMessage">Message</label>
+                    <div class="col-sm-12">
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-paragraph"></i>
+                            </span>
+
+                            <textarea 
+                                type="text"
+                                class="form-control" 
+                                id="userMessage" 
+                                name="userMessage" 
+                                placeholder="Write us a message..." 
+                                ng-model="user.message"
+                                ng-keyup="serverResponse.contactErr = false"
+                                required></textarea>
+                        </div>
+
+                        <span 
+                            ng-if="(contactForm.userMessage.$touched || contactForm.$submitted) && contactForm.userMessage.$valid && !serverResponse.contactErr" 
+                            class="glyphicon glyphicon-ok darkgreen form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <span 
+                            ng-if="(contactForm.userMessage.$touched || contactForm.$submitted) && contactForm.userMessage.$invalid || serverResponse.contactErr" 
+                            class="glyphicon glyphicon-remove darkred form-control-feedback" 
+                            aria-hidden="true">
+                        </span>
+
+                        <p ng-if="contactForm.$submitted && contactForm.userMessage.$error.required" class="help-block">Required</p>
+                    </div><!-- end col -->
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="btn btn-primary" 
+                    ng-disabled="submitSendEmail">
+                    <i ng-if="!submitSendEmail" class="fa fa-fw fa-send"></i> 
+                    <i ng-if="submitSendEmail" class="fa fa-fw fa-spin fa-spinner"></i> 
+                    &nbsp;Send Message
+                </button>
+            </form>
         </div>
         <!-- Contact Details Column -->
-        <div class="col-md-4">
+        <div class="col-md-4" id="contact-details">
             <h3>Contact Details</h3>
-            <p>
-                3481 Melrose Place<br>Beverly Hills, CA 90210<br>
+
+            <p class="lead">
+                <i class="fa fa-mobile fa-fw"></i> 
+                <a href="tel:16047913900" class=" hidden-md hidden-lg hidden-xl">(604) 791-3900</a>
+                <a href="skype:alexdiv87@hotmail.com?call" class="hidden-xs hidden-sm">(604) 791-3900</a>
             </p>
-            <p><i class="fa fa-phone"></i> 
-                <abbr title="Phone">P</abbr>: (123) 456-7890</p>
-            <p><i class="fa fa-envelope-o"></i> 
-                <abbr title="Email">E</abbr>: <a href="mailto:name@example.com">name@example.com</a>
-            </p>
-            <p><i class="fa fa-clock-o"></i> 
-                <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM</p>
-            <ul class="list-unstyled list-inline list-social-icons">
-                <li>
-                    <a href="#"><i class="fa fa-facebook-square fa-2x"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-linkedin-square fa-2x"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-google-plus-square fa-2x"></i></a>
-                </li>
-            </ul>
+            <p class="lead"><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:mountainviewwebtech@gmail.com">mountainviewwebtech@gmail.com</a></p>
+            <p class="lead"><i class="fa fa-clock-o fa-fw"></i> 9:00 AM to 10:00 PM</p>
         </div>
     </div>
     <!-- /.row -->
@@ -57,47 +264,6 @@
     <!-- Contact Form -->
     <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
     <div class="row">
-        <div class="col-md-8">
-            <h3>Send us a Message</h3>
-            
-            <alert-box></alert-box>
-
-            <form name="contactForm" id="contactForm" ng-submit="sendEmail()" novalidate>
-
-                <div class="control-group form-group">
-                    <div class="controls">
-                        <label>Full Name:</label>
-                        <input type="text" class="form-control" id="name" required data-validation-required-message="Please enter your name.">
-                        <p class="help-block"></p>
-                    </div>
-                </div>
-
-                <div class="control-group form-group">
-                    <div class="controls">
-                        <label>Phone Number:</label>
-                        <input type="tel" class="form-control" id="phone" required data-validation-required-message="Please enter your phone number.">
-                    </div>
-                </div>
-
-                <div class="control-group form-group">
-                    <div class="controls">
-                        <label>Email Address:</label>
-                        <input type="email" class="form-control" id="email" required data-validation-required-message="Please enter your email address.">
-                    </div>
-                </div>
-
-                <div class="control-group form-group">
-                    <div class="controls">
-                        <label>Message:</label>
-                        <textarea rows="10" cols="100" class="form-control" id="message" required data-validation-required-message="Please enter your message" maxlength="999" style="resize:none"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary" ng-disabled="submitSendEmail">
-                    Send Message
-                </button>
-            </form>
-        </div>
 
     </div>
     <!-- /.row -->

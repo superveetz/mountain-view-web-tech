@@ -13,9 +13,6 @@
       "./mixins"
     ]
   },
-  "User": {
-    "dataSource": "db"
-  },
   "AccessToken": {
     "dataSource": "db",
     "public": false
@@ -34,5 +31,17 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "Gmail": {
+    "dataSource": "GmailDs",
+    "public": true
+  },
+  "Person": {
+    "dataSource": "MongoDs",
+    "public": true
+  },
+  "Mail": {
+    "dataSource": "MongoDs",
+    "public": true
   }
 }

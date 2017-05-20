@@ -218,26 +218,59 @@
     }])
 
     .controller('MainFooterCtrl', ['$scope', '$document', '$location', '$state', 'smoothScroll', function ($scope, $document, $location, $state, smoothScroll) {
-        console.log('main footer');
+        
     }])
     
     .controller('AppCtrl', ['$rootScope', '$state', function ($rootScope, $state) {
         
     }])
     
-    .controller('ContactCtrl', ['$scope', '$http', 'AlertService', function ($scope, $http, AlertService) {
+    .controller('ContactCtrl', ['$scope', '$http', 'AlertService', 'Mail', function ($scope, $http, AlertService, Mail) {
+        // defaults
+        const dUser = {
+            name: '',
+            email: '',
+            phone: '',
+            subject: '',
+            message: ''
+        };
+
+        const dServerResponse = {
+            loginErr: false,
+            signUpErr: false
+        };
+
+        // init $scope
+        $scope.user             = angular.copy(dUser);
+        $scope.serverResponse   = angular.copy(dServerResponse);
+
         $scope.sendEmail = function () {
             $scope.submitSendEmail = true;
-            $http({
-                method: 'POST',
-                url: '/api/send-email'
+            Mail.create({
+                name: $scope.user.name,
+                email: $scope.user.email,
+                phone: $scope.user.phone,
+                subject: $scope.user.subject,
+                message: $scope.user.message
             })
-            .finally(res => {
+            .$promise
+            .then(res => {
+                $scope.submitSendEmail = false;
+                $scope.user = angular.copy(dUser);
+                $scope.contactForm.$setPristine();
+                $scope.contactForm.$setUntouched();
+                AlertService.setAlert({
+                    show: true,
+                    type: 'success',
+                    title: 'We have received your request and will get back to you as soon as we can.'
+                });
+            })
+            .catch(err => {
                 $scope.submitSendEmail = false;
                 AlertService.setAlert({
-                    type: 'success',
                     show: true,
-                    title: 'Email sent. We will reply back to you as soon as we can.'
+                    type: 'error',
+                    title: 'An unexpected error occured.'
                 });
             });
         };

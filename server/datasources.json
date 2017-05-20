@@ -2,5 +2,32 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "GmailDs": {
+    "name": "GmailDs",
+    "defaultForType": "mail",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "SMTP",
+        "host": "smtp.gmail.com",
+        "secure": true,
+        "port": 465,
+        "auth": {
+          "user": "mountainviewwebtech@gmail.com",
+          "pass": "SuperSecret@321"
+        }
+      }
+    ]
+  },
+  "MongoDs": {
+    "host": "localhost",
+    "port": 27017,
+    "url": "",
+    "database": "MVWebtech",
+    "password": "",
+    "name": "MongoDs",
+    "user": "",
+    "connector": "mongodb"
   }
 }
