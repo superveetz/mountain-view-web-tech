@@ -2806,7 +2806,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         return config || $q.when(config);
       }
     };
-  }]
+  }])
 
   /**
    * @ngdoc object
@@ -2828,7 +2828,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
    *  });
    * ```
    */
-  ).provider('LoopBackResource', function LoopBackResourceProvider() {
+  .provider('LoopBackResource', function LoopBackResourceProvider() {
     /**
      * @ngdoc method
      * @name lbServices.LoopBackResourceProvider#setAuthHeader
