@@ -163,7 +163,7 @@ gulp.task('minify-html', function () {
 
 gulp.task('optimize-images', function() {
     return gulp.src([
-      './client/src/assets/img/**/*'
+      './client/src/assets/img/*'
     ])
     .pipe(imagemin())
     .pipe(gulp.dest('./client/dist/assets/img'));
