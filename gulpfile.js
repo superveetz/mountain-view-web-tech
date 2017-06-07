@@ -107,6 +107,8 @@ gulp.task('concat-vendor-js', function () {
     './client/src/bower_components/async/dist/async.min.js',
     // angular vendor
     './client/src/bower_components/angular/angular.min.js',
+    './client/src/bower_components/angulartics/dist/angulartics.min.js',
+    './client/src/bower_components/angulartics-google-analytics/dist/angulartics-ga.min.js',
     './client/src/bower_components/angular-ui-router/release/angular-ui-router.min.js',
     './client/src/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
     './client/src/bower_components/angular-animate/angular-animate.min.js',

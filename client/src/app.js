@@ -12,7 +12,9 @@
         'app.services',
         'canvas-raining',
         'ngResource',
-        'lbServices'
+        'lbServices',
+        'angulartics',
+        'angulartics.google.analytics'
     ])
 
     .run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout) {

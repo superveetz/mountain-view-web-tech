@@ -26,6 +26,8 @@
     "angularfire": "^2.3.0",
     "animate.css": "^3.5.2",
     "angular-scroll": "^1.0.0",
-    "angular-resource": "^1.6.4"
+    "angular-resource": "^1.6.4",
+    "angulartics-google-analytics": "^0.4.0",
+    "angulartics": "^1.4.0"
   }
 }
