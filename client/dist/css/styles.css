@@ -271,7 +271,6 @@ a {
     font-weight: bold;
     text-transform: uppercase; }
 
-
 /*
  * Header
 */
@@ -429,6 +428,7 @@ a {
     font-size: 16px; }
   .callout h2 {
     font-size: 38px; } }
+
 
 #main-nav .navbar-header .navbar-toggle {
   border: none !important;
