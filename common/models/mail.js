@@ -1,5 +1,13 @@
 'use strict';
-var async = require ('async');
+
+var async   = require('async');
+var aws     = require('aws-sdk');
+// Load your AWS credentials and try to instantiate the object.
+aws.config.update({region: 'us-west-2'});
+aws.config.loadFromPath(__dirname + '/../../server/configs/aws.json');
+
+// Instantiate SES.
+var ses = new aws.SES();
 
 module.exports = function(Mail) {
     // after creating the databse record, send an email
@@ -57,77 +65,122 @@ module.exports = function(Mail) {
         });
     });
 
-    // send an email
-    // Mail.submitContactForm = function(name, email, phone, subject, message, cb) {
+    // Verify email addresses.
+    Mail.verify = function(email, cb) {
+        var params = {
+            EmailAddress: email
+        };
+        
+        ses.verifyEmailAddress(params, function(err, data) {
+            if(err) {
+                return cb(err);
+            } 
+            else {
+                return cb(null, data);
+            } 
+        });
+    };
 
-    //     async.series([
-    //         (seriesCB) => {
-    //             Mail.app.models.Gmail.send({
-    //                 to: 'mountainviewwebtech@gmail.com',
-    //                 from: 'mountainviewwebtech@gmail.com',
-    //                 subject: 'Note to self',
-    //                 html: `
-    //                 <ul>
-    //                     <li>Name: <b>${name}</b></li>
-    //                     <li>Email: <b>${email}</b></li>
-    //                     <li>Phone: <b>${phone}</b></li>
-    //                     <li>Subject: <b>${subject}</b></li>
-    //                     <li>Message: <b>${message}</b></li>
-    //                 </ul>
-    //                 `
-    //             }, function(err, mail) {
-    //                 if (err) {
-    //                     return seriesCB(err);
-    //                 }
+    // List verified email addresses.
+    Mail.listVerified = function(cb) {
+        ses.listVerifiedEmailAddresses(function(err, data) {
+            if(err) {
+                cb(err);
+            } 
+            else {
+                cb(null, data);
+            } 
+        });
+    };
 
-    //                 return seriesCB(null);
-    //             });
-    //         },
-    //         (seriesCB) => {
-    //             Mail.app.models.Gmail.send({
-    //                 to: email,
-    //                 from: 'noreply@mountainviewwebtech.com',
-    //                 subject: 'Thank You For Contacting Us',
-    //                 html: `
-    //                     This is an automated message to let you know that we have recieved your inquiry. We thank you for taking the time to write us and we will get back to you as soon as we can.
-    //                     <br>
-    //                     <hr>
-    //                     <img src="http://mountainviewwebtech.ca/assets/img/logo.png" alt="Mountain View Web Tech Logo"><br>
-    //                     <b>Mountain View Web Tech</b><br>
-    //                     7415 Shaw Ave<br>
-    //                     Chilliwack, BC V2R 3C1
-    //                 `
-    //             }, function(err, mail) {
-    //                 if (err) {
-    //                     return seriesCB(err);
-    //                 }
+    // Deleting verified email addresses.
+    Mail.deleteVerified = function(email, cb) {
+        var params = {
+            EmailAddress: email
+        };
 
-    //                 return seriesCB(null);
-    //             });
-    //         }
-    //     ], (err) => {
-    //         if (err) {
-    //             return cb(err);
-    //         }
-    //         return cb(null, {
-    //             name: name,
-    //             email: email,
-    //             phone: phone,
-    //             subject: subject,
-    //             message: message
-    //         });
-    //     });
-    // }
+        ses.deleteVerifiedEmailAddress(params, function(err, data) {
+            if(err) {
+                cb(err);
+            } 
+            else {
+                cb(null, data);
+            } 
+        });
+    };
 
-    // Mail.remoteMethod('submitContactForm', {
-    //     accepts: [
-    //         { arg: 'name', type: 'string', required: true },
-    //         { arg: 'email', type: 'string', required: true },
-    //         { arg: 'phone', type: 'string', required: true },
-    //         { arg: 'subject', type: 'string', required: true },
-    //         { arg: 'message', type: 'string', required: true },
-    //     ],
-    //     returns: { arg: 'data', type: 'object' },
-    //     http: { path: '/submitContactForm', verb: 'post' }
-    // });
+    // Sending RAW email including an attachment.
+    Mail.send = function(email, cb) {
+        var params = {
+            Destination: { /* required */
+                ToAddresses: [
+                    email
+                ]
+            },
+            Message: { /* required */
+                Body: { /* required */
+                    Html: {
+                        Data: '<p>Body Html</p>', /* required */
+                        Charset: 'UTF-8'
+                    },
+                    Text: {
+                        Data: 'Body text', /* required */
+                        Charset: 'UTF-8'
+                    }
+                },
+                Subject: { /* required */
+                    Data: 'Subject Value', /* required */
+                    Charset: 'UTF-8'
+                }
+            },
+            Source: 'alex.divito@mountainviewwebtech.ca', /* required */
+            ReplyToAddresses: [
+                'alex.divito@mountainviewwebtech.ca'
+            ],
+            SourceArn: 'arn:aws:ses:us-west-2:577142657045:identity/alex.divito@mountainviewwebtech.ca',
+            Tags: [
+                {
+                Name: 'MyName', /* required */
+                Value: 'MyVal' /* required */
+                },
+                /* more items */
+            ]
+        };
+    
+        ses.sendEmail(params, function(err, data) {
+            if (err) return cb(err);
+            else     return cb(null, data);
+        });
+    };
+
+    Mail.remoteMethod('verify', {
+        accepts: [
+            { arg: 'email', type: 'string', required: true }
+        ],
+        returns: { arg: 'data', type: 'object' },
+        http: { path: '/verify', verb: 'post' }
+    });
+
+    Mail.remoteMethod('listVerified', {
+        accepts: [
+        ],
+        returns: { arg: 'data', type: 'object' },
+        http: { path: '/listVerified', verb: 'post' }
+    });
+
+    Mail.remoteMethod('deleteVerified', {
+        accepts: [
+            { arg: 'email', type: 'string', required: true }
+        ],
+        returns: { arg: 'data', type: 'object' },
+        http: { path: '/deleteVerified', verb: 'post' }
+    });
+
+    Mail.remoteMethod('send', {
+        accepts: [
+            { arg: 'email', type: 'string', required: true }
+        ],
+        returns: { arg: 'data', type: 'object' },
+        http: { path: '/send', verb: 'post' }
+    });
 };
