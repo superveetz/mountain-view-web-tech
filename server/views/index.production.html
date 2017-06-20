@@ -208,6 +208,16 @@
 
         <!-- Vendor JS + AngularJS + AppJS -->
         <script src="/vendors+app.min.js" async></script>
+
+        <script>
+            // Initialize the Firebase SDK
+            var config = {
+                apiKey: 'AIzaSyDLoNjTWobxBBCIkHVHno2wgL78wAdXdLY',
+                authDomain: 'cis245-final-project.firebaseapp.com',
+                databaseURL: 'https://cis245-final-project.firebaseio.com',
+            };
+            firebase.initializeApp(config);
+        </script>
         
     </body>
 </html>
