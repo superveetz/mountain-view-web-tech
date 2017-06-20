@@ -77,12 +77,17 @@
             url: '',
             templateUrl: '/views/index.html',
             controller: ['$rootScope', function ($rootScope) {
+                
             }]
         })
         
         .state('app.home', {
             url: '/',
-            templateUrl: '/views/home/index.html'
+            templateUrl: '/views/home/index.html',
+            controller: ['$rootScope', function ($rootScope) {
+                console.log('loaded!');
+                window.prerenderReady = true;
+            }]
         })
         
         .state('app.about', {
