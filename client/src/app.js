@@ -1,4 +1,4 @@
-(function (angular) {
+(function (angular, firebase) {
     // declare app and load dependencies
     angular.module('app', [
         'smoothScroll',
@@ -18,6 +18,14 @@
     ])
 
     .run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout) {
+        // Initialize the Firebase SDK
+        var config = {
+            apiKey: 'AIzaSyDLoNjTWobxBBCIkHVHno2wgL78wAdXdLY',
+            authDomain: 'cis245-final-project.firebaseapp.com',
+            databaseURL: 'https://cis245-final-project.firebaseio.com',
+        };
+        firebase.initializeApp(config);
+
         // attach $state to public $rootScope so that it can be used freely in templates
         $rootScope.$state = $state;
         
@@ -110,4 +118,4 @@
             templateUrl: '/views/404/index.html'
         });
     }]);
-})(angular);
+})(angular, firebase);
