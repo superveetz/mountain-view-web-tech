@@ -84,7 +84,7 @@
             abstract: true,
             url: '',
             templateUrl: '/views/index.html',
-            controller: ['$rootScope', function ($rootScope) {
+            controller: ['$rootScope', '$timeout', function ($rootScope, $timeout) {
                 
             }]
         })
@@ -92,20 +92,31 @@
         .state('app.home', {
             url: '/',
             templateUrl: '/views/home/index.html',
-            controller: ['$rootScope', function ($rootScope) {
-                console.log('loaded!');
-                window.prerenderReady = true;
+            controller: ['$timeout', function ($timeout) {
+                $timeout(() => {
+                    window.prerenderReady = true;
+                }, 500);
             }]
         })
         
         .state('app.about', {
             url: '/about',
-            templateUrl: '/views/about/index.html'
+            templateUrl: '/views/about/index.html',
+            controller: ['$timeout', function ($timeout) {
+                $timeout(() => {
+                    window.prerenderReady = true;
+                }, 500);
+            }]
         })
 
         .state('app.services', {
             url: '/services',
-            templateUrl: '/views/services/index.html'
+            templateUrl: '/views/services/index.html',
+            controller: ['$timeout', function ($timeout) {
+                $timeout(() => {
+                    window.prerenderReady = true;
+                }, 500);
+            }]
         })
         
         .state('app.contact', {
@@ -115,7 +126,12 @@
         })
         .state('404', {
             url: '/404',
-            templateUrl: '/views/404/index.html'
+            templateUrl: '/views/404/index.html',
+            controller: ['$timeout', function ($timeout) {
+                $timeout(() => {
+                    window.prerenderReady = true;
+                }, 500);
+            }]
         });
     }]);
 })(angular, firebase);

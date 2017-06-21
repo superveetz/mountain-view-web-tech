@@ -3,9 +3,13 @@
         'app.services'
     ])
 
-    .controller('MainNavCtrl', ['$rootScope', '$scope', '$firebaseAuth', '$http', '$window', '$state', '$timeout', 'ModalService', 'AlertService', function ($rootScope, $scope, $firebaseAuth, $http, $window, $state, $timeout, ModalService, AlertService) {
+    .controller('MainNavCtrl', ['$rootScope', '$timeout', '$scope', '$firebaseAuth', '$http', '$window', '$state', '$timeout', 'ModalService', 'AlertService', function ($rootScope, $timeout, $scope, $firebaseAuth, $http, $window, $state, $timeout, ModalService, AlertService) {
         // init $scope
         $scope.authObj = $firebaseAuth();
+
+        $timeout(() => {
+            window.prerenderReady = true;
+        }, 500);
         
         // open register account modal
         $scope.openRegisterAccountModal = function (closeMobileNav) {
