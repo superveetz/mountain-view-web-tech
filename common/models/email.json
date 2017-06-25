@@ -1,5 +1,5 @@
 {
-  "name": "Gmail",
+  "name": "email",
   "base": "Email",
   "idInjection": true,
   "options": {

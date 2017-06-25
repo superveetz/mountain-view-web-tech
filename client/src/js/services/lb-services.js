@@ -2168,13 +2168,13 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
 
 /**
  * @ngdoc object
- * @name lbServices.Gmail
- * @header lbServices.Gmail
+ * @name lbServices.Email
+ * @header lbServices.Email
  * @object
  *
  * @description
  *
- * A $resource object for interacting with the `Gmail` model.
+ * A $resource object for interacting with the `Email` model.
  *
  * ## Example
  *
@@ -2184,12 +2184,12 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
  *
  */
   module.factory(
-    "Gmail",
+    "Email",
     [
       'LoopBackResource', 'LoopBackAuth', '$injector', '$q',
       function(LoopBackResource, LoopBackAuth, $injector, $q) {
         var R = LoopBackResource(
-        urlBase + "/Gmails/:id",
+        urlBase + "/emails/:id",
           { 'id': '@id' },
           {
           }
@@ -2200,13 +2200,13 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
 
         /**
         * @ngdoc property
-        * @name lbServices.Gmail#modelName
-        * @propertyOf lbServices.Gmail
+        * @name lbServices.Email#modelName
+        * @propertyOf lbServices.Email
         * @description
         * The name of the model represented by this $resource,
-        * i.e. `Gmail`.
+        * i.e. `Email`.
         */
-        R.modelName = "Gmail";
+        R.modelName = "Email";
 
 
 

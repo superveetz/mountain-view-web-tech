@@ -12,12 +12,16 @@ var async   = require('async');
 module.exports = function(Mail) {
     // after creating the databse record, send an email
     Mail.afterRemote('create', function (ctx, newMail, next) {
+        
+        // this disables SSL! remove once we have our certificate!!
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
         async.series([
             (seriesCB) => {
-                Mail.app.models.Gmail.send({
-                    to: 'mountainviewwebtech@gmail.com',
-                    from: 'mountainviewwebtech@gmail.com',
-                    subject: 'Note to self',
+                Mail.app.models.Email.send({
+                    to: 'info@mountainviewwebtech.ca',
+                    from: newMail.Email,
+                    subject: newMail.subject,
                     html: `
                     <ul>
                         <li>Name: <b>${newMail.name}</b></li>
@@ -36,9 +40,9 @@ module.exports = function(Mail) {
                 });
             },
             (seriesCB) => {
-                Mail.app.models.Gmail.send({
+                Mail.app.models.Email.send({
                     to: newMail.email,
-                    from: 'noreply@mountainviewwebtech.com',
+                    from: 'info@mountainviewwebtech.ca',
                     subject: 'Thank You For Contacting Us',
                     html: `
                         This is an automated message to let you know that we have recieved your inquiry. We thank you for taking the time to write us and we will get back to you as soon as we can.

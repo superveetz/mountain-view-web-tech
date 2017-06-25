@@ -64,36 +64,56 @@
             abstract: true,
             url: '',
             templateUrl: '/views/index.html',
-            controller: ['$rootScope', function ($rootScope) {}]
+            controller: ['$rootScope', '$timeout', function ($rootScope, $timeout) {}]
         }).state('app.home', {
             url: '/',
             templateUrl: '/views/home/index.html',
-            controller: ['$rootScope', function ($rootScope) {
-                console.log('loaded!');
-                window.prerenderReady = true;
+            controller: ['$timeout', function ($timeout) {
+                $timeout(function () {
+                    window.prerenderReady = true;
+                }, 500);
             }]
         }).state('app.about', {
             url: '/about',
-            templateUrl: '/views/about/index.html'
+            templateUrl: '/views/about/index.html',
+            controller: ['$timeout', function ($timeout) {
+                $timeout(function () {
+                    window.prerenderReady = true;
+                }, 500);
+            }]
         }).state('app.services', {
             url: '/services',
-            templateUrl: '/views/services/index.html'
+            templateUrl: '/views/services/index.html',
+            controller: ['$timeout', function ($timeout) {
+                $timeout(function () {
+                    window.prerenderReady = true;
+                }, 500);
+            }]
         }).state('app.contact', {
             url: '/contact',
             templateUrl: '/views/contact/index.html',
             controller: 'ContactCtrl'
         }).state('404', {
             url: '/404',
-            templateUrl: '/views/404/index.html'
+            templateUrl: '/views/404/index.html',
+            controller: ['$timeout', function ($timeout) {
+                $timeout(function () {
+                    window.prerenderReady = true;
+                }, 500);
+            }]
         });
     }]);
 })(angular, firebase);
 'use strict';
 
 (function (angular) {
-    angular.module('app.controllers', ['app.services']).controller('MainNavCtrl', ['$rootScope', '$scope', '$firebaseAuth', '$http', '$window', '$state', '$timeout', 'ModalService', 'AlertService', function ($rootScope, $scope, $firebaseAuth, $http, $window, $state, $timeout, ModalService, AlertService) {
+    angular.module('app.controllers', ['app.services']).controller('MainNavCtrl', ['$rootScope', '$timeout', '$scope', '$firebaseAuth', '$http', '$window', '$state', 'ModalService', 'AlertService', function ($rootScope, $timeout, $scope, $firebaseAuth, $http, $window, $state, ModalService, AlertService) {
         // init $scope
         $scope.authObj = $firebaseAuth();
+
+        $timeout(function () {
+            window.prerenderReady = true;
+        }, 500);
 
         // open register account modal
         $scope.openRegisterAccountModal = function (closeMobileNav) {
@@ -2701,13 +2721,13 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
   /**
    * @ngdoc object
-   * @name lbServices.Gmail
-   * @header lbServices.Gmail
+   * @name lbServices.Email
+   * @header lbServices.Email
    * @object
    *
    * @description
    *
-   * A $resource object for interacting with the `Gmail` model.
+   * A $resource object for interacting with the `Email` model.
    *
    * ## Example
    *
@@ -2716,18 +2736,18 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
    * for an example of using this object.
    *
    */
-  module.factory("Gmail", ['LoopBackResource', 'LoopBackAuth', '$injector', '$q', function (LoopBackResource, LoopBackAuth, $injector, $q) {
-    var R = LoopBackResource(urlBase + "/Gmails/:id", { 'id': '@id' }, {});
+  module.factory("Email", ['LoopBackResource', 'LoopBackAuth', '$injector', '$q', function (LoopBackResource, LoopBackAuth, $injector, $q) {
+    var R = LoopBackResource(urlBase + "/emails/:id", { 'id': '@id' }, {});
 
     /**
     * @ngdoc property
-    * @name lbServices.Gmail#modelName
-    * @propertyOf lbServices.Gmail
+    * @name lbServices.Email#modelName
+    * @propertyOf lbServices.Email
     * @description
     * The name of the model represented by this $resource,
-    * i.e. `Gmail`.
+    * i.e. `Email`.
     */
-    R.modelName = "Gmail";
+    R.modelName = "Email";
 
     return R;
   }]);
@@ -2924,6 +2944,63 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
 (function (angular) {
     // declare app and load dependencies
+    angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', 'CanvasSystem', function ($interval, CanvasSystem) {
+        return {
+            restrict: 'A',
+            link: function link(scope, elem) {
+                // canvas animation taken from: https://codepen.io/ruigewaard/pen/JHDdF
+                elem.ready(function () {
+                    // let 
+                    // ctx     = elem[0].getContext('2d'), 
+                    // w       = elem.width(),
+                    // h       = elem.height();
+
+                    // ctx.strokeStyle              = 'rgba(174,194,224,0.5)';
+                    // // ctx.strokeStyle              = 'rgba(0,0,0,1)';
+                    // ctx.lineWidth                = 0.5;
+                    // ctx.lineCap                  = 'round';
+                    // ctx.globalCompositeOperation ='source-over'; // https://www.w3schools.com/tags/canvas_globalcompositeoperation.asp
+
+                    // start
+
+                });
+            }
+        };
+    }]).factory('CanvasSystem', [function () {
+        var cSystem = function cSystem(elem) {
+            this.ctx = elem[0].getContext('2d');
+            this.w = elem.width();
+            this.h = elem.height();
+            this.x = 0;
+            this.y = 0;
+            console.log("this.ctx:", this.ctx);
+        };
+
+        cSystem.prototype.draw = function () {
+            this.x += 1;
+            this.y += 1;
+            console.log("this:", this);
+
+            this.ctx.fillStyle = '#000';
+            this.ctx.fillRect(0, 0, this.w, this.h);
+
+            this.ctx.fillStyle = "#ffffff";
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
+            this.ctx.closePath();
+
+            this.ctx.fill();
+
+            requestAnimationFrame(this.draw);
+        };
+
+        return cSystem;
+    }]);
+})(angular);
+'use strict';
+
+(function (angular) {
+    // declare app and load dependencies
     angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', function ($interval) {
         return {
             restrict: 'A',
@@ -2992,62 +3069,5 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 });
             }
         };
-    }]);
-})(angular);
-'use strict';
-
-(function (angular) {
-    // declare app and load dependencies
-    angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', 'CanvasSystem', function ($interval, CanvasSystem) {
-        return {
-            restrict: 'A',
-            link: function link(scope, elem) {
-                // canvas animation taken from: https://codepen.io/ruigewaard/pen/JHDdF
-                elem.ready(function () {
-                    // let 
-                    // ctx     = elem[0].getContext('2d'), 
-                    // w       = elem.width(),
-                    // h       = elem.height();
-
-                    // ctx.strokeStyle              = 'rgba(174,194,224,0.5)';
-                    // // ctx.strokeStyle              = 'rgba(0,0,0,1)';
-                    // ctx.lineWidth                = 0.5;
-                    // ctx.lineCap                  = 'round';
-                    // ctx.globalCompositeOperation ='source-over'; // https://www.w3schools.com/tags/canvas_globalcompositeoperation.asp
-
-                    // start
-
-                });
-            }
-        };
-    }]).factory('CanvasSystem', [function () {
-        var cSystem = function cSystem(elem) {
-            this.ctx = elem[0].getContext('2d');
-            this.w = elem.width();
-            this.h = elem.height();
-            this.x = 0;
-            this.y = 0;
-            console.log("this.ctx:", this.ctx);
-        };
-
-        cSystem.prototype.draw = function () {
-            this.x += 1;
-            this.y += 1;
-            console.log("this:", this);
-
-            this.ctx.fillStyle = '#000';
-            this.ctx.fillRect(0, 0, this.w, this.h);
-
-            this.ctx.fillStyle = "#ffffff";
-            this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            requestAnimationFrame(this.draw);
-        };
-
-        return cSystem;
     }]);
 })(angular);

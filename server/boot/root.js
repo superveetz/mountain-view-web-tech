@@ -5,7 +5,9 @@ module.exports = function(server) {
   var router = server.loopback.Router();
 
   router.get('*', function (req, res) {
-    return res.render('index.' + process.env.NODE_ENV + '.html');
+    return res.render('index.' + process.env.NODE_ENV + '.html', {
+      title: 'testing'
+    });
   });
   
   server.use(router);

@@ -32,12 +32,12 @@
     "dataSource": "db",
     "public": false
   },
-  "Gmail": {
-    "dataSource": "GmailDs",
-    "public": true
-  },
   "Person": {
     "dataSource": "MongoDs",
+    "public": true
+  },
+  "email": {
+    "dataSource": "EmailServer",
     "public": true
   },
   "Mail": {

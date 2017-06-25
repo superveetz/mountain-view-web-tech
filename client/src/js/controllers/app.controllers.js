@@ -3,7 +3,7 @@
         'app.services'
     ])
 
-    .controller('MainNavCtrl', ['$rootScope', '$timeout', '$scope', '$firebaseAuth', '$http', '$window', '$state', '$timeout', 'ModalService', 'AlertService', function ($rootScope, $timeout, $scope, $firebaseAuth, $http, $window, $state, $timeout, ModalService, AlertService) {
+    .controller('MainNavCtrl', ['$rootScope', '$timeout', '$scope', '$firebaseAuth', '$http', '$window', '$state', 'ModalService', 'AlertService', function ($rootScope, $timeout, $scope, $firebaseAuth, $http, $window, $state, ModalService, AlertService) {
         // init $scope
         $scope.authObj = $firebaseAuth();
 
