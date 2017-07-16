@@ -17,7 +17,7 @@
         'angulartics.google.analytics'
     ])
 
-    .run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout) {
+    .run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', 'MvWtSeoService', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout, MvWtSeoService) {
         // Initialize the Firebase SDK
         var config = {
             apiKey: 'AIzaSyDLoNjTWobxBBCIkHVHno2wgL78wAdXdLY',
@@ -31,6 +31,9 @@
         
         // store Current User data
         $rootScope.CurrentUser = undefined;
+
+        // attach MvWtSeoService for dynamic Seo
+        $rootScope.MvWtSeoService = MvWtSeoService.public;
         
         // register an event that will listen for firebase authentication
         $firebaseAuth().$onAuthStateChanged(firebaseUser => {
@@ -52,6 +55,10 @@
 
         // hook into onStateChangeSuccess event
         $rootScope.$on('$stateChangeSuccess', function(e, toState, toParams, fromState, fromParams) {
+            // update seo
+            MvWtSeoService.setTitle(toState.title);
+            MvWtSeoService.setDescription(toState.description);
+
             // scroll to top on page once state change transition starts
             $location.hash(fromState.name);
             $anchorScroll();
@@ -95,7 +102,9 @@
                 $timeout(() => {
                     window.prerenderReady = true;
                 }, 500);
-            }]
+            }],
+            title: 'Mountain View Web Tech | Web Applications & Databases, You Can Count On',
+            description: "A state of the art, technology company based out of Chilliwack, British Columbia.",
         })
         
         .state('app.about', {

@@ -2,6 +2,30 @@
     angular.module('app.services', [
         'app.controllers'
     ])
+
+    .service('MvWtSeoService', [function () {
+        let seoObj = {
+            title: '',
+            description: ''
+        };
+
+        return {
+            public: {
+                getTitle: function () {
+                    return seoObj.title;
+                },
+                getDescription: function () {
+                    return seoObj.description;
+                }
+            },
+            setTitle: function (title) {
+                seoObj.title = title;
+            },
+            setDescription: function (description) {
+                seoObj.description = description;
+            }
+        };
+    }])
     
     .service('ModalService', ['$uibModal', '$timeout', function ($uibModal, $timeout) {
         return {
