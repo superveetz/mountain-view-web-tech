@@ -12,9 +12,6 @@ var async   = require('async');
 module.exports = function(Mail) {
     // after creating the databse record, send an email
     Mail.afterRemote('create', function (ctx, newMail, next) {
-        
-        // this disables SSL! remove once we have our certificate!!
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
         async.series([
             (seriesCB) => {
