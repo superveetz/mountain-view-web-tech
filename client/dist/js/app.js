@@ -2,7 +2,7 @@
 
 (function (angular, firebase) {
     // declare app and load dependencies
-    angular.module('app', ['smoothScroll', 'firebase', 'ui.router', 'ui.bootstrap', 'ui.validate', 'ngAnimate', 'app.controllers', 'app.directives', 'app.services', 'canvas-raining', 'ngResource', 'lbServices', 'angulartics', 'angulartics.google.analytics']).run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout) {
+    angular.module('app', ['smoothScroll', 'firebase', 'ui.router', 'ui.bootstrap', 'ui.validate', 'ngAnimate', 'app.controllers', 'app.directives', 'app.services', 'canvas-raining', 'ngResource', 'lbServices', 'angulartics', 'angulartics.google.analytics']).run(['$rootScope', '$state', '$window', '$firebaseAuth', '$location', '$anchorScroll', '$timeout', 'MvWtSeoService', function ($rootScope, $state, $window, $firebaseAuth, $location, $anchorScroll, $timeout, MvWtSeoService) {
         // Initialize the Firebase SDK
         var config = {
             apiKey: 'AIzaSyDLoNjTWobxBBCIkHVHno2wgL78wAdXdLY',
@@ -16,6 +16,9 @@
 
         // store Current User data
         $rootScope.CurrentUser = undefined;
+
+        // attach MvWtSeoService for dynamic Seo
+        $rootScope.MvWtSeoService = MvWtSeoService.public;
 
         // register an event that will listen for firebase authentication
         $firebaseAuth().$onAuthStateChanged(function (firebaseUser) {
@@ -37,6 +40,10 @@
 
         // hook into onStateChangeSuccess event
         $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
+            // update seo
+            MvWtSeoService.setTitle(toState.title);
+            MvWtSeoService.setDescription(toState.description);
+
             // scroll to top on page once state change transition starts
             $location.hash(fromState.name);
             $anchorScroll();
@@ -72,7 +79,9 @@
                 $timeout(function () {
                     window.prerenderReady = true;
                 }, 500);
-            }]
+            }],
+            title: 'Mountain View Web Tech | Web Applications & Databases, You Can Count On',
+            description: "A state of the art, technology company based out of Chilliwack, British Columbia."
         }).state('app.about', {
             url: '/about',
             templateUrl: '/views/about/index.html',
@@ -504,7 +513,29 @@
 'use strict';
 
 (function (angular) {
-    angular.module('app.services', ['app.controllers']).service('ModalService', ['$uibModal', '$timeout', function ($uibModal, $timeout) {
+    angular.module('app.services', ['app.controllers']).service('MvWtSeoService', [function () {
+        var seoObj = {
+            title: '',
+            description: ''
+        };
+
+        return {
+            public: {
+                getTitle: function getTitle() {
+                    return seoObj.title;
+                },
+                getDescription: function getDescription() {
+                    return seoObj.description;
+                }
+            },
+            setTitle: function setTitle(title) {
+                seoObj.title = title;
+            },
+            setDescription: function setDescription(description) {
+                seoObj.description = description;
+            }
+        };
+    }]).service('ModalService', ['$uibModal', '$timeout', function ($uibModal, $timeout) {
         return {
             openRegisterAccountModal: function openRegisterAccountModal() {
                 var modalInstance = $uibModal.open({
@@ -2944,63 +2975,6 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
 (function (angular) {
     // declare app and load dependencies
-    angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', 'CanvasSystem', function ($interval, CanvasSystem) {
-        return {
-            restrict: 'A',
-            link: function link(scope, elem) {
-                // canvas animation taken from: https://codepen.io/ruigewaard/pen/JHDdF
-                elem.ready(function () {
-                    // let 
-                    // ctx     = elem[0].getContext('2d'), 
-                    // w       = elem.width(),
-                    // h       = elem.height();
-
-                    // ctx.strokeStyle              = 'rgba(174,194,224,0.5)';
-                    // // ctx.strokeStyle              = 'rgba(0,0,0,1)';
-                    // ctx.lineWidth                = 0.5;
-                    // ctx.lineCap                  = 'round';
-                    // ctx.globalCompositeOperation ='source-over'; // https://www.w3schools.com/tags/canvas_globalcompositeoperation.asp
-
-                    // start
-
-                });
-            }
-        };
-    }]).factory('CanvasSystem', [function () {
-        var cSystem = function cSystem(elem) {
-            this.ctx = elem[0].getContext('2d');
-            this.w = elem.width();
-            this.h = elem.height();
-            this.x = 0;
-            this.y = 0;
-            console.log("this.ctx:", this.ctx);
-        };
-
-        cSystem.prototype.draw = function () {
-            this.x += 1;
-            this.y += 1;
-            console.log("this:", this);
-
-            this.ctx.fillStyle = '#000';
-            this.ctx.fillRect(0, 0, this.w, this.h);
-
-            this.ctx.fillStyle = "#ffffff";
-            this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            requestAnimationFrame(this.draw);
-        };
-
-        return cSystem;
-    }]);
-})(angular);
-'use strict';
-
-(function (angular) {
-    // declare app and load dependencies
     angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', function ($interval) {
         return {
             restrict: 'A',
@@ -3069,5 +3043,62 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 });
             }
         };
+    }]);
+})(angular);
+'use strict';
+
+(function (angular) {
+    // declare app and load dependencies
+    angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', 'CanvasSystem', function ($interval, CanvasSystem) {
+        return {
+            restrict: 'A',
+            link: function link(scope, elem) {
+                // canvas animation taken from: https://codepen.io/ruigewaard/pen/JHDdF
+                elem.ready(function () {
+                    // let 
+                    // ctx     = elem[0].getContext('2d'), 
+                    // w       = elem.width(),
+                    // h       = elem.height();
+
+                    // ctx.strokeStyle              = 'rgba(174,194,224,0.5)';
+                    // // ctx.strokeStyle              = 'rgba(0,0,0,1)';
+                    // ctx.lineWidth                = 0.5;
+                    // ctx.lineCap                  = 'round';
+                    // ctx.globalCompositeOperation ='source-over'; // https://www.w3schools.com/tags/canvas_globalcompositeoperation.asp
+
+                    // start
+
+                });
+            }
+        };
+    }]).factory('CanvasSystem', [function () {
+        var cSystem = function cSystem(elem) {
+            this.ctx = elem[0].getContext('2d');
+            this.w = elem.width();
+            this.h = elem.height();
+            this.x = 0;
+            this.y = 0;
+            console.log("this.ctx:", this.ctx);
+        };
+
+        cSystem.prototype.draw = function () {
+            this.x += 1;
+            this.y += 1;
+            console.log("this:", this);
+
+            this.ctx.fillStyle = '#000';
+            this.ctx.fillRect(0, 0, this.w, this.h);
+
+            this.ctx.fillStyle = "#ffffff";
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
+            this.ctx.closePath();
+
+            this.ctx.fill();
+
+            requestAnimationFrame(this.draw);
+        };
+
+        return cSystem;
     }]);
 })(angular);
