@@ -12,24 +12,5 @@
     "name": "MongoDs",
     "user": "",
     "connector": "mongodb"
-  },
-  "EmailServer": {
-    "name": "EmailServer",
-    "connector": "mail",
-    "transports": [
-      {
-        "type": "smtp",
-        "host": "45.79.73.151",
-        "secure": false,
-        "port": 587,
-        "tls": {
-          "rejectUnauthorized": false
-        },
-        "auth": {
-          "user": "alex@mountainviewwebtech.ca",
-          "pass": "Monsoon@321"
-        }
-      }
-    ]
   }
 }

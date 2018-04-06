@@ -1,158 +1,108 @@
 'use strict';
 
 var async   = require('async');
-// var aws     = require('aws-sdk');
 // // Load your AWS credentials and try to instantiate the object.
-// aws.config.update({region: 'us-west-2'});
-// aws.config.loadFromPath(__dirname + '/../../server/configs/aws.json');
+var AWS = require('aws-sdk');
+AWS.config.update({region: 'us-west-2'});
 
-// // Instantiate SES.
-// var ses = new aws.SES();
+var awsSecrets = require('aws-secrets');
 
 module.exports = function(Mail) {
-    // after creating the databse record, send an email
-    Mail.afterRemote('create', function (ctx, newMail, next) {
+    // Sending email
+    Mail.send = function(name, email, phone, subject, body, cb) {
+        // console.log('fromEmail: ', fromEmail);
+        // console.log('toEmail: ', toEmail);
+        // console.log('subject: ', subject);
+        // console.log('body: ', body);
 
-        async.series([
-            (seriesCB) => {
-                Mail.app.models.Email.send({
-                    to: 'info@mountainviewwebtech.ca',
-                    from: newMail.Email,
-                    subject: newMail.subject,
-                    html: `
-                    <ul>
-                        <li>Name: <b>${newMail.name}</b></li>
-                        <li>Email: <b>${newMail.email}</b></li>
-                        <li>Phone: <b>${newMail.phone}</b></li>
-                        <li>Subject: <b>${newMail.subject}</b></li>
-                        <li>Message: <b>${newMail.message}</b></li>
-                    </ul>
-                    `
-                }, function(err, mail) {
-                    if (err) {
-                        return seriesCB(err);
-                    }
-
-                    return seriesCB(null);
-                });
+        const params = {
+            Destination: {
+                ToAddresses: ['alex@mountainviewwebtech.ca']
             },
-            (seriesCB) => {
-                Mail.app.models.Email.send({
-                    to: newMail.email,
-                    from: 'info@mountainviewwebtech.ca',
-                    subject: 'Thank You For Contacting Us',
-                    html: `
-                        This is an automated message to let you know that we have recieved your inquiry. We thank you for taking the time to write us and we will get back to you as soon as we can.
-                        <br>
-                        <br>
-                        <img src="http://mountainviewwebtech.ca/assets/img/logo.png" alt="Mountain View Web Tech Logo"><br>
-                        <b>Mountain View Web Tech</b><br>
-                        7415 Shaw Ave<br>
-                        Chilliwack, BC V2R 3C1
-                    `
-                }, function(err, mail) {
-                    if (err) {
-                        return seriesCB(err);
+            Message: {
+                Body: {
+                    Html: {
+                        Charset: 'UTF-8',
+                        Data:`
+                            <html>
+                                <body>
+                                    <p>
+                                        Dear Mountain View Web Tech, <br><br>
+
+                                        My name is ${name} with phone number: ${phone}. <br><br>
+
+                                        ${body}
+                                    </p>
+                                </body>
+                            </html>
+                        `
+                    },
+                    Text: {
+                        Charset: 'UTF-8',
+                        Data: `
+                            Dear Mountain View Web Tech,\r\n\r\n
+
+                            My name is ${name} with phone number: ${phone}.\r\n\r\n
+
+                            ${body}
+                        `
                     }
+                },
+                Subject: {
+                    Charset: 'UTF-8',
+                    Data: subject
+                }
+            },
+            ReplyToAddresses: [email],
+            ReturnPath: "Mountain View Web Tech <alex@mountainviewwebtech.ca>",
+            Source: "Mountain View Web Tech <alex@mountainviewwebtech.ca>"
+        };
 
-                    return seriesCB(null);
-                });
-            }
-        ], (err) => {
-            if (err) {
-                return next(err);
-            }
-            return next(null);
-        });
-    });
-
-    // // Verify email addresses.
-    // Mail.verify = function(email, cb) {
-    //     var params = {
-    //         EmailAddress: email
-    //     };
+        var SES = new AWS.SES();
         
-    //     ses.verifyEmailAddress(params, function(err, data) {
-    //         if(err) {
-    //             return cb(err);
-    //         } 
-    //         else {
-    //             return cb(null, data);
-    //         } 
-    //     });
-    // };
+        // Your code goes here. 
+        SES.sendEmail(params, (err, data) => {
+            if (err) console.log(err, err.stack)
+            else console.log(data)
+            cb(err);
+        });
 
-    // // List verified email addresses.
-    // Mail.listVerified = function(cb) {
-    //     ses.listVerifiedEmailAddresses(function(err, data) {
-    //         if(err) {
-    //             cb(err);
-    //         } 
-    //         else {
-    //             cb(null, data);
-    //         } 
-    //     });
-    // };
+        return;
+        
+        // var endpoint = "https://secretsmanager.us-west-2.amazonaws.com",
+        //     region = "us-west-2",
+        //     secretName = "prod/mountainviewwebtech/SES",
+        //     secret,
+        //     binarySecretData;
 
-    // // Deleting verified email addresses.
-    // Mail.deleteVerified = function(email, cb) {
-    //     var params = {
-    //         EmailAddress: email
-    //     };
+        // // Create a Secrets Manager client
+        // var secretsmanager = new AWS.SecretsManager({
+        //     endpoint: endpoint,
+        //     region: region
+        // });
 
-    //     ses.deleteVerifiedEmailAddress(params, function(err, data) {
-    //         if(err) {
-    //             cb(err);
-    //         } 
-    //         else {
-    //             cb(null, data);
-    //         } 
-    //     });
-    // };
-
-    // // Sending RAW email including an attachment.
-    // Mail.send = function(email, cb) {
-    //     var params = {
-    //         Destination: { /* required */
-    //             ToAddresses: [
-    //                 email
-    //             ]
-    //         },
-    //         Message: { /* required */
-    //             Body: { /* required */
-    //                 Html: {
-    //                     Data: '<p>Body Html</p>', /* required */
-    //                     Charset: 'UTF-8'
-    //                 },
-    //                 Text: {
-    //                     Data: 'Body text', /* required */
-    //                     Charset: 'UTF-8'
-    //                 }
-    //             },
-    //             Subject: { /* required */
-    //                 Data: 'Subject Value', /* required */
-    //                 Charset: 'UTF-8'
-    //             }
-    //         },
-    //         Source: 'alex.divito@mountainviewwebtech.ca', /* required */
-    //         ReplyToAddresses: [
-    //             'alex.divito@mountainviewwebtech.ca'
-    //         ],
-    //         SourceArn: 'arn:aws:ses:us-west-2:577142657045:identity/alex.divito@mountainviewwebtech.ca',
-    //         Tags: [
-    //             {
-    //             Name: 'MyName', /* required */
-    //             Value: 'MyVal' /* required */
-    //             },
-    //             /* more items */
-    //         ]
-    //     };
-    
-    //     ses.sendEmail(params, function(err, data) {
-    //         if (err) return cb(err);
-    //         else     return cb(null, data);
-    //     });
-    // };
+        // secretsmanager.getSecretValue({SecretId: secretName}, function(err, data) {
+        //     if(err) {
+        //         if(err.code === 'ResourceNotFoundException')
+        //             console.log("The requested secret " + secretName + " was not found");
+        //         else if(err.code === 'InvalidRequestException')
+        //             console.log("The request was invalid due to: " + err.message);
+        //         else if(err.code === 'InvalidParameterException')
+        //             console.log("The request had invalid params: " + err.message);
+        //     }
+        //     else {
+        //         // Decrypted secret using the associated KMS CMK
+        //         // Depending on whether the secret was a string or binary, one of these fields will be populated
+        //         if(data.SecretString !== "") {
+        //             secret = data.SecretString;
+        //         } else {
+        //             binarySecretData = data.SecretBinary;
+        //         }
+        //     }
+            
+        // });
+        
+    };
 
     // Mail.remoteMethod('verify', {
     //     accepts: [
@@ -177,11 +127,16 @@ module.exports = function(Mail) {
     //     http: { path: '/deleteVerified', verb: 'post' }
     // });
 
-    // Mail.remoteMethod('send', {
-    //     accepts: [
-    //         { arg: 'email', type: 'string', required: true }
-    //     ],
-    //     returns: { arg: 'data', type: 'object' },
-    //     http: { path: '/send', verb: 'post' }
-    // });
+    Mail.remoteMethod('send', {
+        isStatic: true,
+        accepts: [
+            { arg: 'name', type: 'string', required: true },
+            { arg: 'email', type: 'string', required: true },
+            { arg: 'phone', type: 'string', required: true },
+            { arg: 'subject', type: 'string', required: true },
+            { arg: 'message', type: 'string', required: true }
+        ],
+        returns: { arg: 'data', type: 'object' },
+        http: { path: '/send', verb: 'post' }
+    });
 };

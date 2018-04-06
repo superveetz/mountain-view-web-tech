@@ -36,10 +36,6 @@
     "dataSource": "MongoDs",
     "public": true
   },
-  "email": {
-    "dataSource": "EmailServer",
-    "public": true
-  },
   "Mail": {
     "dataSource": "MongoDs",
     "public": true

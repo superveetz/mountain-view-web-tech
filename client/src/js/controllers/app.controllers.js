@@ -250,7 +250,7 @@
 
         $scope.sendEmail = function () {
             $scope.submitSendEmail = true;
-            Mail.create({
+            Mail.send({
                 name: $scope.user.name,
                 email: $scope.user.email,
                 phone: $scope.user.phone,
@@ -259,6 +259,7 @@
             })
             .$promise
             .then(res => {
+                // console.log('res: ', res);
                 $scope.submitSendEmail = false;
                 $scope.user = angular.copy(dUser);
                 $scope.contactForm.$setPristine();
@@ -270,6 +271,7 @@
                 });
             })
             .catch(err => {
+                // console.log('err: ', err);
                 $scope.submitSendEmail = false;
                 AlertService.setAlert({
                     show: true,

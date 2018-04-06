@@ -6,7 +6,7 @@ module.exports = function(server) {
 
   router.get('*', function (req, res) {
     return res.render('index.' + process.env.NODE_ENV + '.html', {
-      title: 'testing'
+      title: 'Mountain View Web Tech'
     });
   });
   
