@@ -80,8 +80,8 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'Mountain View Web Tech | Web Applications & Databases, You Can Count On',
-            description: "A state of the art, web technology company based out of Chilliwack, British Columbia."
+            title: 'Mountain View Web Tech',
+            description: "A state of the art, web technology company based out of Chilliwack, British Columbia. We specialize in web development and custom business solutions including software design & development, database administration, media marketing, domain hosting/management and much more."
         }).state('app.about', {
             url: '/about',
             templateUrl: '/views/about/index.html',
@@ -91,7 +91,7 @@
                 }, 500);
             }],
             title: 'About | Mountain View Web Tech',
-            description: "Based in the Fraser Valley, we've been passionate about building digital stories and custom business solutions since 2017."
+            description: "We are a small startup based out of the Fraser Valley that is passionate about building digital stories and business solutions since 2017."
         }).state('app.services', {
             url: '/services',
             templateUrl: '/views/services/index.html',
@@ -101,7 +101,7 @@
                 }, 500);
             }],
             title: 'Services | Mountain View Web Tech',
-            description: "We provide many software related IT services including web development, database administation and domain hosting/management."
+            description: "We provide many software related IT services including web development, database administation, media marketing, domain hosting/management and much more. Let's work together to create something amazing."
         }).state('app.contact', {
             url: '/contact',
             templateUrl: '/views/contact/index.html',
