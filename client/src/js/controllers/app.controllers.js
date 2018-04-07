@@ -229,7 +229,11 @@
         
     }])
     
-    .controller('ContactCtrl', ['$scope', '$http', 'AlertService', 'Mail', function ($scope, $http, AlertService, Mail) {
+    .controller('ContactCtrl', ['$scope', '$http', '$timeout', 'AlertService', 'Mail', function ($scope, $http, $timeout, AlertService, Mail) {
+        $timeout(() => {
+            window.prerenderReady = true;
+        }, 500);
+        
         // defaults
         const dUser = {
             name: '',
