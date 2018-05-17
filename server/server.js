@@ -11,7 +11,7 @@ var app = module.exports = loopback();
 
 // prerender for SEO
 app.use(require('prerender-node').set('prerenderToken', 'Ljfb7lKGnBM0LrZnDrEu'));
-// simple change 2
+
 // set static files to allow static files to avoid using the router
 if (process.env.NODE_ENV === 'development') {
   app.use(loopback.static(path.resolve(__dirname, '../client/src/')));
