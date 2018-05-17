@@ -84,7 +84,6 @@
         $urlRouterProvider.otherwise('404');
         
         // declare all app states
-        // TODO: add dynamic SEO
         $stateProvider
         .state('app', {
             abstract: true,
@@ -103,7 +102,7 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'Mountain View Web Tech',
+            title: 'Home',
             description: "A state of the art, web technology company based out of Chilliwack, British Columbia. We specialize in web development and custom business solutions including software design & development, database administration, media marketing, domain hosting/management and much more."
         })
         
@@ -115,7 +114,7 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'About | Mountain View Web Tech',
+            title: 'About',
             description: "We are a small startup based out of the Fraser Valley that is passionate about building digital stories and business solutions since 2017."
         })
 
@@ -127,7 +126,7 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'Services | Mountain View Web Tech',
+            title: 'Services',
             description: "We provide many software related IT services including web development, database administation, media marketing, domain hosting/management and much more. Let's work together to create something amazing."
         })
         
@@ -135,8 +134,8 @@
             url: '/contact',
             templateUrl: '/views/contact/index.html',
             controller: 'ContactCtrl',
-            title: 'Contact Us | Mountain View Web Tech',
-            description: "Interested in a quote or want to arrange a meeting? Send us a message."
+            title: 'Contact Us',
+            description: "Interested in a quote or want to arrange a meeting? Fill in this form and Alex Di Vito will be able to get back to you as soon as he can."
         })
         .state('404', {
             url: '/404',

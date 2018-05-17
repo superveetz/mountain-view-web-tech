@@ -66,7 +66,6 @@
         $urlRouterProvider.otherwise('404');
 
         // declare all app states
-        // TODO: add dynamic SEO
         $stateProvider.state('app', {
             abstract: true,
             url: '',
@@ -80,7 +79,7 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'Mountain View Web Tech',
+            title: 'Home',
             description: "A state of the art, web technology company based out of Chilliwack, British Columbia. We specialize in web development and custom business solutions including software design & development, database administration, media marketing, domain hosting/management and much more."
         }).state('app.about', {
             url: '/about',
@@ -90,7 +89,7 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'About | Mountain View Web Tech',
+            title: 'About',
             description: "We are a small startup based out of the Fraser Valley that is passionate about building digital stories and business solutions since 2017."
         }).state('app.services', {
             url: '/services',
@@ -100,14 +99,14 @@
                     window.prerenderReady = true;
                 }, 500);
             }],
-            title: 'Services | Mountain View Web Tech',
+            title: 'Services',
             description: "We provide many software related IT services including web development, database administation, media marketing, domain hosting/management and much more. Let's work together to create something amazing."
         }).state('app.contact', {
             url: '/contact',
             templateUrl: '/views/contact/index.html',
             controller: 'ContactCtrl',
-            title: 'Contact Us | Mountain View Web Tech',
-            description: "Interested in a quote or want to arrange a meeting? Send us a message."
+            title: 'Contact Us',
+            description: "Interested in a quote or want to arrange a meeting? Fill in this form and Alex Di Vito will be able to get back to you as soon as he can."
         }).state('404', {
             url: '/404',
             templateUrl: '/views/404/index.html',
@@ -523,24 +522,25 @@
 (function (angular) {
     angular.module('app.services', ['app.controllers']).service('MvWtSeoService', [function () {
         var seoObj = {
-            title: '',
-            description: ''
+            firstCall: false,
+            mainTitle: '', // main title from the <title> element
+            currentTitle: '',
+            delimittingChar: '|'
         };
 
         return {
-            public: {
-                getTitle: function getTitle() {
-                    return seoObj.title;
-                },
-                getDescription: function getDescription() {
-                    return seoObj.description;
-                }
-            },
             setTitle: function setTitle(title) {
-                seoObj.title = title;
+                // get main title from <title> on first setTitle() call
+                if (!seoObj.mainTitle && !seoObj.firstCall) {
+                    seoObj.mainTitle = angular.element('head title').text();
+                    seoObj.firstCall = true;
+                }
+
+                seoObj.currentTitle = seoObj.mainTitle ? title + " " + seoObj.delimittingChar + " " + seoObj.mainTitle : title;
+                angular.element('head title').text(seoObj.currentTitle);
             },
             setDescription: function setDescription(description) {
-                seoObj.description = description;
+                angular.element('head meta[name="description"]').attr('contents', description);
             }
         };
     }]).service('ModalService', ['$uibModal', '$timeout', function ($uibModal, $timeout) {
@@ -3030,6 +3030,63 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
 (function (angular) {
     // declare app and load dependencies
+    angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', 'CanvasSystem', function ($interval, CanvasSystem) {
+        return {
+            restrict: 'A',
+            link: function link(scope, elem) {
+                // canvas animation taken from: https://codepen.io/ruigewaard/pen/JHDdF
+                elem.ready(function () {
+                    // let 
+                    // ctx     = elem[0].getContext('2d'), 
+                    // w       = elem.width(),
+                    // h       = elem.height();
+
+                    // ctx.strokeStyle              = 'rgba(174,194,224,0.5)';
+                    // // ctx.strokeStyle              = 'rgba(0,0,0,1)';
+                    // ctx.lineWidth                = 0.5;
+                    // ctx.lineCap                  = 'round';
+                    // ctx.globalCompositeOperation ='source-over'; // https://www.w3schools.com/tags/canvas_globalcompositeoperation.asp
+
+                    // start
+
+                });
+            }
+        };
+    }]).factory('CanvasSystem', [function () {
+        var cSystem = function cSystem(elem) {
+            this.ctx = elem[0].getContext('2d');
+            this.w = elem.width();
+            this.h = elem.height();
+            this.x = 0;
+            this.y = 0;
+            console.log("this.ctx:", this.ctx);
+        };
+
+        cSystem.prototype.draw = function () {
+            this.x += 1;
+            this.y += 1;
+            console.log("this:", this);
+
+            this.ctx.fillStyle = '#000';
+            this.ctx.fillRect(0, 0, this.w, this.h);
+
+            this.ctx.fillStyle = "#ffffff";
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
+            this.ctx.closePath();
+
+            this.ctx.fill();
+
+            requestAnimationFrame(this.draw);
+        };
+
+        return cSystem;
+    }]);
+})(angular);
+'use strict';
+
+(function (angular) {
+    // declare app and load dependencies
     angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', function ($interval) {
         return {
             restrict: 'A',
@@ -3098,62 +3155,5 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 });
             }
         };
-    }]);
-})(angular);
-'use strict';
-
-(function (angular) {
-    // declare app and load dependencies
-    angular.module('canvas-raining', []).directive('canvasRaining', ['$interval', 'CanvasSystem', function ($interval, CanvasSystem) {
-        return {
-            restrict: 'A',
-            link: function link(scope, elem) {
-                // canvas animation taken from: https://codepen.io/ruigewaard/pen/JHDdF
-                elem.ready(function () {
-                    // let 
-                    // ctx     = elem[0].getContext('2d'), 
-                    // w       = elem.width(),
-                    // h       = elem.height();
-
-                    // ctx.strokeStyle              = 'rgba(174,194,224,0.5)';
-                    // // ctx.strokeStyle              = 'rgba(0,0,0,1)';
-                    // ctx.lineWidth                = 0.5;
-                    // ctx.lineCap                  = 'round';
-                    // ctx.globalCompositeOperation ='source-over'; // https://www.w3schools.com/tags/canvas_globalcompositeoperation.asp
-
-                    // start
-
-                });
-            }
-        };
-    }]).factory('CanvasSystem', [function () {
-        var cSystem = function cSystem(elem) {
-            this.ctx = elem[0].getContext('2d');
-            this.w = elem.width();
-            this.h = elem.height();
-            this.x = 0;
-            this.y = 0;
-            console.log("this.ctx:", this.ctx);
-        };
-
-        cSystem.prototype.draw = function () {
-            this.x += 1;
-            this.y += 1;
-            console.log("this:", this);
-
-            this.ctx.fillStyle = '#000';
-            this.ctx.fillRect(0, 0, this.w, this.h);
-
-            this.ctx.fillStyle = "#ffffff";
-            this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            requestAnimationFrame(this.draw);
-        };
-
-        return cSystem;
     }]);
 })(angular);

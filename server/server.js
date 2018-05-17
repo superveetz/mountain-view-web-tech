@@ -10,7 +10,7 @@ var path      = require('path');
 var app = module.exports = loopback();
 
 // prerender for SEO
-app.use(require('prerender-node').set('prerenderToken', 'eywtf9vjsm2YRxGUfMw1'));
+app.use(require('prerender-node').set('prerenderToken', 'Ljfb7lKGnBM0LrZnDrEu'));
 
 // set static files to allow static files to avoid using the router
 if (process.env.NODE_ENV === 'development') {
